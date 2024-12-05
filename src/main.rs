@@ -6,7 +6,11 @@ use regex::Regex;
 
 #[tokio::main]
 async fn main() {
-    let input = get_puzzel_input("https://adventofcode.com/2024/day/2/input", "***REMOVED***").await;
+    let input = get_puzzel_input(
+        "https://adventofcode.com/2024/day/2/input",
+        &std::env::var("SESSION_COOKIE").expect("Set the AoC session cookie"),
+    )
+    .await;
 
     // let mut input: String = String::new();
     // let mut input_amount = File::open("day1").unwrap().read_to_string(&mut input);
