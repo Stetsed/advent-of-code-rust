@@ -130,6 +130,54 @@ async fn advent_of_code_day_2(input: String) {
     )
 }
 
+async fn advent_of_code_day_2_part2(input: String) {
+    let lines: Vec<&str> = input.lines().collect();
+    let lines_amount = lines.len();
+    let mut safe_count = 0;
+
+    for i in lines {
+        let mut safe = true;
+        let mut unsafe_count = 0;
+        let mut non_safe_reason = "".to_string();
+
+        let mut numbers: Vec<i32> = Vec::new();
+        let split = i.split(" ");
+        for b in split {
+            numbers.push(b.parse::<i32>().unwrap());
+        }
+        if !numbers.is_sorted_by(|a, b| a < b) && !numbers.is_sorted_by(|a, b| a > b) {
+            safe = false;
+            non_safe_reason = "non-sort".to_string();
+        } else {
+            let mut numbers_iter = numbers.iter().peekable();
+            for x in 0..numbers_iter.len() {
+                let i = numbers_iter.next().unwrap();
+                if let Some(o) = numbers_iter.peek() {
+                    if i.abs_diff(o.to_owned().to_owned()) > 3 {
+                        if unsafe_count != 0 {
+                            safe = false;
+                            non_safe_reason = "ABS>".to_string();
+                            break;
+                        }
+                        unsafe_count += 1;
+                    }
+                }
+            }
+        }
+        println!(
+            "{:?} is safe: {} because {}",
+            numbers, safe, non_safe_reason
+        );
+        if safe {
+            safe_count += 1;
+        }
+    }
+    println!(
+        "Safe lines are : {} with line count {}",
+        safe_count, lines_amount
+    )
+}
+
 async fn advent_of_code_day_3(input_url: &str, session_cookie: &str) {
     let input = get_puzzel_input(input_url, session_cookie).await;
 
